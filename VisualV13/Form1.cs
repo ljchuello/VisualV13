@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using MetroFramework.Forms;
 
 namespace VisualV13
@@ -26,9 +27,9 @@ namespace VisualV13
 
         #region Configuración
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
-
+            return await tas
         }
 
         private void btnRestaurar_Click(object sender, EventArgs e)
