@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace VisualV13
     {
         private Configuracion _configuracion = new Configuracion();
         private Ws_InicioSesion _wsInicioSesion = new Ws_InicioSesion();
+        private Ws_Documentos _wsDocumentos = new Ws_Documentos();
         private Odbc _odbc = new Odbc();
 
         private bool _trabajando = true;
@@ -47,6 +49,7 @@ namespace VisualV13
             // Ejecutamos
             _ = Trabajo_Estadísticas_Email();
             _ = Trabajo_Estadisticas_Comprobantes();
+            _ = Trabajo_Autorizar();
         }
 
         #region Trabajación
@@ -69,6 +72,10 @@ namespace VisualV13
             }
         }
 
+        /// <summary>
+        /// Muestra la estadistica de los correos
+        /// </summary>
+        /// <returns></returns>
         async Task Trabajo_Estadísticas_Email()
         {
             await Task.Run(() =>
@@ -96,6 +103,10 @@ namespace VisualV13
             });
         }
 
+        /// <summary>
+        ///  Muestra las estadisticas de los documentos
+        /// </summary>
+        /// <returns></returns>
         async Task Trabajo_Estadisticas_Comprobantes()
         {
             await Task.Run(() =>
@@ -113,6 +124,53 @@ namespace VisualV13
                     finally
                     {
                         // Esperamos 1 seg
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Autoriza los comprobantes
+        /// </summary>
+        /// <returns></returns>
+        async Task Trabajo_Autorizar()
+        {
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (_trabajando)
+                    {
+                        try
+                        {
+                            // Validamos si hay documentos por autorizar
+                            string id = _odbc.Select_Get_NoAutoriado();
+
+                            // Validamos
+                            if (!Cadena.Vacia(id))
+                            {
+                                // Iniciamos sesion
+                                oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
+
+                                // Tokens
+                                Dictionary<string, string> token = oResultado.Resultado;
+
+                                // Mandamos a autorizar
+                                await _wsDocumentos.Autorizar(id, token, txtUrl.Text);
+                            }
+
+                            // No hay nada que autorizar esperamos
+                            Thread.Sleep(1000);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+                    else
+                    {
+                        // Esperamos
                         Thread.Sleep(1000);
                     }
                 }

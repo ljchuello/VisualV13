@@ -70,6 +70,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Libreria\Ws_Documentos.cs" />
     <Compile Include="Libreria\Cadena.cs" />
     <Compile Include="Libreria\Configuracion.cs" />
     <Compile Include="Libreria\Odbc.cs" />
