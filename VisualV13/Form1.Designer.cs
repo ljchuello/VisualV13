@@ -30,6 +30,11 @@
         {
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblEmailsSinEnviar = new MetroFramework.Controls.MetroLabel();
+            this.lblFechaInicio = new MetroFramework.Controls.MetroLabel();
+            this.lblEstado = new MetroFramework.Controls.MetroLabel();
+            this.btnEjecutar = new MetroFramework.Controls.MetroButton();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.btnRestaurar = new MetroFramework.Controls.MetroButton();
             this.btnGuardar = new MetroFramework.Controls.MetroButton();
@@ -41,15 +46,12 @@
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
-            this.btnEjecutar = new MetroFramework.Controls.MetroButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblEstado = new MetroFramework.Controls.MetroLabel();
-            this.lblFechaInicio = new MetroFramework.Controls.MetroLabel();
-            this.lblEmailsSinEnviar = new MetroFramework.Controls.MetroLabel();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.lblDocList = new MetroFramework.Controls.MetroLabel();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
-            this.metroTabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.metroTabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // metroTabControl1
@@ -65,6 +67,7 @@
             // 
             // metroTabPage1
             // 
+            this.metroTabPage1.Controls.Add(this.lblDocList);
             this.metroTabPage1.Controls.Add(this.groupBox1);
             this.metroTabPage1.HorizontalScrollbarBarColor = true;
             this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
@@ -77,6 +80,60 @@
             this.metroTabPage1.VerticalScrollbarBarColor = true;
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.SystemColors.Window;
+            this.groupBox1.Controls.Add(this.lblEmailsSinEnviar);
+            this.groupBox1.Controls.Add(this.lblFechaInicio);
+            this.groupBox1.Controls.Add(this.lblEstado);
+            this.groupBox1.Controls.Add(this.btnEjecutar);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(289, 127);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "groupBox1";
+            // 
+            // lblEmailsSinEnviar
+            // 
+            this.lblEmailsSinEnviar.AutoSize = true;
+            this.lblEmailsSinEnviar.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.lblEmailsSinEnviar.Location = new System.Drawing.Point(6, 95);
+            this.lblEmailsSinEnviar.Name = "lblEmailsSinEnviar";
+            this.lblEmailsSinEnviar.Size = new System.Drawing.Size(147, 25);
+            this.lblEmailsSinEnviar.TabIndex = 4;
+            this.lblEmailsSinEnviar.Text = "lblEmailsSinEnviar";
+            // 
+            // lblFechaInicio
+            // 
+            this.lblFechaInicio.AutoSize = true;
+            this.lblFechaInicio.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.lblFechaInicio.Location = new System.Drawing.Point(6, 70);
+            this.lblFechaInicio.Name = "lblFechaInicio";
+            this.lblFechaInicio.Size = new System.Drawing.Size(114, 25);
+            this.lblFechaInicio.TabIndex = 3;
+            this.lblFechaInicio.Text = "lblFechaInicio";
+            // 
+            // lblEstado
+            // 
+            this.lblEstado.AutoSize = true;
+            this.lblEstado.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.lblEstado.Location = new System.Drawing.Point(6, 45);
+            this.lblEstado.Name = "lblEstado";
+            this.lblEstado.Size = new System.Drawing.Size(80, 25);
+            this.lblEstado.TabIndex = 2;
+            this.lblEstado.Text = "lblEstado";
+            // 
+            // btnEjecutar
+            // 
+            this.btnEjecutar.Location = new System.Drawing.Point(6, 19);
+            this.btnEjecutar.Name = "btnEjecutar";
+            this.btnEjecutar.Size = new System.Drawing.Size(277, 23);
+            this.btnEjecutar.TabIndex = 1;
+            this.btnEjecutar.Text = "Iniciar/Detener";
+            this.btnEjecutar.UseSelectable = true;
+            this.btnEjecutar.Click += new System.EventHandler(this.metroButton1_Click);
             // 
             // metroTabPage2
             // 
@@ -278,59 +335,15 @@
             this.metroLabel1.TabIndex = 2;
             this.metroLabel1.Text = "Url (http://localhost/)";
             // 
-            // btnEjecutar
+            // lblDocList
             // 
-            this.btnEjecutar.Location = new System.Drawing.Point(6, 19);
-            this.btnEjecutar.Name = "btnEjecutar";
-            this.btnEjecutar.Size = new System.Drawing.Size(277, 23);
-            this.btnEjecutar.TabIndex = 1;
-            this.btnEjecutar.Text = "Iniciar/Detener";
-            this.btnEjecutar.UseSelectable = true;
-            this.btnEjecutar.Click += new System.EventHandler(this.metroButton1_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.groupBox1.Controls.Add(this.lblEmailsSinEnviar);
-            this.groupBox1.Controls.Add(this.lblFechaInicio);
-            this.groupBox1.Controls.Add(this.lblEstado);
-            this.groupBox1.Controls.Add(this.btnEjecutar);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(289, 127);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // lblEstado
-            // 
-            this.lblEstado.AutoSize = true;
-            this.lblEstado.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.lblEstado.Location = new System.Drawing.Point(6, 45);
-            this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(80, 25);
-            this.lblEstado.TabIndex = 2;
-            this.lblEstado.Text = "lblEstado";
-            // 
-            // lblFechaInicio
-            // 
-            this.lblFechaInicio.AutoSize = true;
-            this.lblFechaInicio.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.lblFechaInicio.Location = new System.Drawing.Point(6, 70);
-            this.lblFechaInicio.Name = "lblFechaInicio";
-            this.lblFechaInicio.Size = new System.Drawing.Size(114, 25);
-            this.lblFechaInicio.TabIndex = 3;
-            this.lblFechaInicio.Text = "lblFechaInicio";
-            // 
-            // lblEmailsSinEnviar
-            // 
-            this.lblEmailsSinEnviar.AutoSize = true;
-            this.lblEmailsSinEnviar.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.lblEmailsSinEnviar.Location = new System.Drawing.Point(6, 95);
-            this.lblEmailsSinEnviar.Name = "lblEmailsSinEnviar";
-            this.lblEmailsSinEnviar.Size = new System.Drawing.Size(147, 25);
-            this.lblEmailsSinEnviar.TabIndex = 4;
-            this.lblEmailsSinEnviar.Text = "lblEmailsSinEnviar";
+            this.lblDocList.AutoSize = true;
+            this.lblDocList.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.lblDocList.Location = new System.Drawing.Point(3, 133);
+            this.lblDocList.Name = "lblDocList";
+            this.lblDocList.Size = new System.Drawing.Size(106, 25);
+            this.lblDocList.TabIndex = 5;
+            this.lblDocList.Text = "metroLabel5";
             // 
             // Form1
             // 
@@ -342,10 +355,11 @@
             this.Text = "Form1";
             this.metroTabControl1.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);
-            this.metroTabPage2.ResumeLayout(false);
-            this.metroTabPage2.PerformLayout();
+            this.metroTabPage1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.metroTabPage2.ResumeLayout(false);
+            this.metroTabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -370,6 +384,8 @@
         private MetroFramework.Controls.MetroLabel lblEstado;
         private MetroFramework.Controls.MetroLabel lblEmailsSinEnviar;
         private MetroFramework.Controls.MetroLabel lblFechaInicio;
+        private MetroFramework.Controls.MetroLabel lblDocList;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

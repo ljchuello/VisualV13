@@ -45,7 +45,8 @@ namespace VisualV13
             metroButton1_Click(null, null);
 
             // Ejecutamos
-            _ = Trabajo_Correos_SinEnviar();
+            _ = Trabajo_Estadísticas_Email();
+            _ = Trabajo_Estadisticas_Comprobantes();
         }
 
         #region Trabajación
@@ -57,18 +58,18 @@ namespace VisualV13
                 _trabajando = true;
                 lblEstado.Text = "Estado: Iniciado";
                 lblFechaInicio.Text = $"Fecha inicio: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
-                lblEmailsSinEnviar.Text = $"Emails sin enviar: N/D";
+                //lblEmailsSinEnviar.Text = $"Emails sin enviar: N/D";
             }
             else
             {
                 lblEstado.Text = "Estado: Detenido";
                 lblFechaInicio.Text = "Fecha inicio:";
-                lblEmailsSinEnviar.Text = "Emails sin enviar:";
+                //lblEmailsSinEnviar.Text = "Emails sin enviar:";
                 _trabajando = false;
             }
         }
 
-        async Task Trabajo_Correos_SinEnviar()
+        async Task Trabajo_Estadísticas_Email()
         {
             await Task.Run(() =>
             {
@@ -81,6 +82,29 @@ namespace VisualV13
 
                         // Set
                         lblEmailsSinEnviar.Text = $"Emails sin enviar: {noEmail:n0}";
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    finally
+                    {
+                        // Esperamos 1 seg
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
+        }
+
+        async Task Trabajo_Estadisticas_Comprobantes()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        lblDocList.Text = _odbc.Select_List_Comprobante();
                     }
                     catch (Exception e)
                     {
