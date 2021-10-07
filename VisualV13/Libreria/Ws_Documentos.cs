@@ -86,5 +86,37 @@ namespace VisualV13.Libreria
             });
             return task;
         }
+
+        public Task EnviarEmail(string idDocument, Dictionary<string, string> token, string url)
+        {
+            Task task = Task.Run(async () =>
+            {
+                // Obtenemos el id de la empresa
+                int num = _odbc.Select_empresaId(idDocument);
+
+                // Hacemos el cambio de empresa
+                await AutorizarDoc_CambioEmp(url, token, num);
+
+                // Recuperamos los correos
+                string emails = _odbc.Select_Get_Emails(idDocument);
+
+                // Enviamos
+                RestClient restClient = new RestClient(string.Concat(url, "DocumentoEmitido/ReenviarCorreo"))
+                {
+                    Timeout = -1
+                };
+                RestRequest restRequest = new RestRequest(Method.POST);
+                restRequest.AddHeader("Content-Type", "application/json");
+                restRequest.AddHeader("Referer", string.Concat(url, "DocumentoEmitido?fecha_desde=2017/01/01&fecha_hasta=2017/01/01"));
+                restRequest.AddParameter("application/json", string.Concat(new [] { "{\"destinatarios\":\"", emails, "\",\"doc_id\":\"", idDocument, "\"}" }), ParameterType.RequestBody);
+                foreach (KeyValuePair<string, string> row in token)
+                {
+                    restRequest.AddParameter(row.Key, row.Value, ParameterType.Cookie);
+                }
+                IRestResponse iRestResponse = restClient.Execute(restRequest);
+                string result = iRestResponse.Content;
+            });
+            return task;
+        }
     }
 }

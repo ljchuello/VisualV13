@@ -8,6 +8,10 @@ namespace VisualV13.Libreria
     {
         private const string ConnectionString = "DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;";
 
+        /// <summary>
+        /// Indica la cantidad de correos que no se han enviado
+        /// </summary>
+        /// <returns></returns>
         public int Select_Count_NoMail()
         {
             int cantidad = 0;
@@ -36,6 +40,70 @@ namespace VisualV13.Libreria
                 Console.WriteLine(exception);
             }
             return cantidad;
+        }
+
+        /// <summary>
+        /// Obtiene el id del proximo documento que no ha enviado correo
+        /// </summary>
+        /// <returns></returns>
+        public string Select_NoMail_Proximo()
+        {
+            string id = string.Empty;
+            try
+            {
+                using (OdbcConnection odbcConnection = new OdbcConnection("DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;"))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    odbcConnection.Open();
+                    odbcCommand.Connection = odbcConnection;
+                    odbcCommand.CommandText = "SET DATEFORMAT YMD" +
+                                              "\nSELECT TOP 1 db.id FROM dbo.DocumentosBase db" +
+                                              "\nWHERE id NOT IN (SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
+                                              "\nEstadoId = 17 AND" +
+                                              $"\ndb.fechaEmision > '{GetStringDateTime(DateTime.Now.AddDays(-30))}' AND" +
+                                              $"\ndb.fechaAutorizacion < '{GetStringDateTime(DateTime.Now.AddMinutes(-15))}'; ";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        id = Convert.ToString(dbReader["id"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            return id;
+        }
+
+        /// <summary>
+        /// Recupera los correos del cliente asociado al id que se pasa como parametro
+        /// </summary>
+        /// <returns></returns>
+        public string Select_Get_Emails(string id)
+        {
+            string email = string.Empty;
+            try
+            {
+                using (OdbcConnection odbcConnection = new OdbcConnection("DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;"))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    odbcConnection.Open();
+                    odbcCommand.Connection = odbcConnection;
+                    odbcCommand.CommandText = "SET DATEFORMAT YMD" +
+                                              $"\nSELECT db.emailCliente FROM dbo.DocumentosBase db WHERE id = '{id}'";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        email = Convert.ToString(dbReader["emailCliente"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            return email;
         }
 
         /// <summary>
@@ -79,7 +147,10 @@ namespace VisualV13.Libreria
             return stringBuilder.ToString();
         }
 
-
+        /// <summary>
+        /// Devuelve el id de un documento aautorizar
+        /// </summary>
+        /// <returns></returns>
         public string Select_Get_NoAutoriado()
         {
             string id = string.Empty;
@@ -109,11 +180,21 @@ namespace VisualV13.Libreria
             return id;
         }
 
+        /// <summary>
+        /// Devuelve en formato string la fecha de sql
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         private string GetStringDateTime(DateTime dateTime)
         {
             return $"{dateTime:yyyy-MM-dd HH:mm:ss}";
         }
 
+        /// <summary>
+        /// Hace una peticion paracambiar la empresa
+        /// </summary>
+        /// <param name="idDoc"></param>
+        /// <returns></returns>
         public int Select_empresaId(string idDoc)
         {
             int empresaId = 0;

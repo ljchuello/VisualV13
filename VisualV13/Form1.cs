@@ -50,6 +50,7 @@ namespace VisualV13
             _ = Trabajo_Estadísticas_Email();
             _ = Trabajo_Estadisticas_Comprobantes();
             _ = Trabajo_Autorizar();
+            _ = Trabajo_CorreosEnviar();
         }
 
         #region Trabajación
@@ -158,6 +159,49 @@ namespace VisualV13
 
                                 // Mandamos a autorizar
                                 await _wsDocumentos.Autorizar(id, token, txtUrl.Text);
+                            }
+
+                            // No hay nada que autorizar esperamos
+                            Thread.Sleep(1000);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+                    else
+                    {
+                        // Esperamos
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
+        }
+
+        async Task Trabajo_CorreosEnviar()
+        {
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (_trabajando)
+                    {
+                        try
+                        {
+                            // Validamos si hay documentos por enviar
+                            string id = _odbc.Select_NoMail_Proximo();
+
+                            // Validamos
+                            if (!Cadena.Vacia(id))
+                            {
+                                // Iniciamos sesion
+                                oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
+
+                                // Tokens
+                                Dictionary<string, string> token = oResultado.Resultado;
+
+                                // Mandamos a autorizar
+                                await _wsDocumentos.EnviarEmail(id, token, txtUrl.Text);
                             }
 
                             // No hay nada que autorizar esperamos
