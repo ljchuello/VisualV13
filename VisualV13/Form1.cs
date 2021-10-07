@@ -14,8 +14,10 @@ namespace VisualV13
         private Ws_InicioSesion _wsInicioSesion = new Ws_InicioSesion();
         private Ws_Documentos _wsDocumentos = new Ws_Documentos();
         private Odbc _odbc = new Odbc();
+        private Servicio _servicio = new Servicio();
 
         private bool _trabajando = true;
+        private bool _close = false;
 
         public Form1()
         {
@@ -44,6 +46,19 @@ namespace VisualV13
 
             //Text
             Text = "Visual V13";
+
+            // Validamos si hay otros abiertos
+            if (_servicio.Count() > 1)
+            {
+                _trabajando = false;
+                _close = true;
+                MessageBox.Show("Se cierra el servicio, ya hay otro servicio abierto");
+                Application.Exit();
+                Environment.Exit(0);
+                return;
+            }
+
+            // Stop
             metroButton1_Click(null, null);
 
             // Ejecutamos
@@ -81,7 +96,7 @@ namespace VisualV13
         {
             await Task.Run(() =>
             {
-                while (true)
+                while (_close == false)
                 {
                     try
                     {
@@ -112,7 +127,7 @@ namespace VisualV13
         {
             await Task.Run(() =>
             {
-                while (true)
+                while (_close == false)
                 {
                     try
                     {
@@ -182,7 +197,7 @@ namespace VisualV13
         {
             await Task.Run(async () =>
             {
-                while (true)
+                while (_close == false)
                 {
                     if (_trabajando)
                     {
