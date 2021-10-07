@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Libreria\Cadena.cs" />
     <Compile Include="Libreria\Configuracion.cs" />
+    <Compile Include="Libreria\Odbc.cs" />
     <Compile Include="Libreria\oResultado.cs" />
     <Compile Include="Libreria\Ws_InicioSesion.cs" />
     <Compile Include="Program.cs" />

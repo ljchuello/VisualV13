@@ -22,6 +22,8 @@ namespace VisualV13.Libreria
             {
                 ST1_ObtenerCookies(url);
                 _oResultado = oResultado.Exitoso(ST2_IniciarSesion(url, correo, contrasenia));
+
+
             }
             catch (Exception exception)
             {

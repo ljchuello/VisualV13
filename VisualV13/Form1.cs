@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Forms;
@@ -10,6 +11,9 @@ namespace VisualV13
     {
         private Configuracion _configuracion = new Configuracion();
         private Ws_InicioSesion _wsInicioSesion = new Ws_InicioSesion();
+        private Odbc _odbc = new Odbc();
+
+        private bool _trabajando = true;
 
         public Form1()
         {
@@ -35,9 +39,114 @@ namespace VisualV13
             txtUsuario.Text = _configuracion.Usuario;
             txtContraseña.Text = _configuracion.Contrasenia;
             txtSql.Text = _configuracion.MsSqlServer;
+
+            //Text
+            Text = "Visual V13";
+            metroButton1_Click(null, null);
+
+            // Ejecutamos
+            _ = Trabajo_Correos_SinEnviar();
         }
 
+        #region Trabajación
+
+        private void metroButton1_Click(object sender, EventArgs e)
+        {
+            if (_trabajando == false)
+            {
+                _trabajando = true;
+                lblEstado.Text = "Estado: Iniciado";
+                lblFechaInicio.Text = $"Fecha inicio: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+                lblEmailsSinEnviar.Text = $"Emails sin enviar: N/D";
+            }
+            else
+            {
+                lblEstado.Text = "Estado: Detenido";
+                lblFechaInicio.Text = "Fecha inicio:";
+                lblEmailsSinEnviar.Text = "Emails sin enviar:";
+                _trabajando = false;
+            }
+        }
+
+        async Task Trabajo_Correos_SinEnviar()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        // Obtenemos los correos no enviados
+                        int noEmail = _odbc.Select_Count_NoMail();
+
+                        // Set
+                        lblEmailsSinEnviar.Text = $"Emails sin enviar: {noEmail:n0}";
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    finally
+                    {
+                        // Esperamos 1 seg
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
+        }
+
+        #endregion
+
         #region Configuración
+
+        bool Validar()
+        {
+            try
+            {
+                // Validamos la url
+                if (Cadena.Vacia(txtUrl.Text))
+                {
+                    MessageBox.Show("Debe ingresar la url del servidor");
+                    return false;
+                }
+
+                // Validamos el usuario
+                if (Cadena.Vacia(txtUsuario.Text))
+                {
+                    MessageBox.Show("Debe ingresar el usuario de la página web");
+                    return false;
+                }
+
+                // Validamos el contraseña
+                if (Cadena.Vacia(txtContraseña.Text))
+                {
+                    MessageBox.Show("Debe ingresar la contraseña del usuario de la página web");
+                    return false;
+                }
+
+                // Validamos el sql
+                if (Cadena.Vacia(txtSql.Text))
+                {
+                    MessageBox.Show("Debe ingresar el nombre de servicio de SQL SERVER");
+                    return false;
+                }
+
+                // Validamosel inicio desion
+                if (!_wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text).Success)
+                {
+                    MessageBox.Show("No se ha podido verificar el inicio de sesión");
+                    return false;
+                }
+
+                // Libre de pecados
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
@@ -46,38 +155,9 @@ namespace VisualV13
                 btnGuardar.Enabled = false;
                 try
                 {
-                    // Validamos la url
-                    if (Cadena.Vacia(txtUrl.Text))
+                    // Validamos
+                    if (!Validar())
                     {
-                        MessageBox.Show("Debe ingresar la url del servidor");
-                        return;
-                    }
-
-                    // Validamos el usuario
-                    if (Cadena.Vacia(txtUsuario.Text))
-                    {
-                        MessageBox.Show("Debe ingresar el usuario de la página web");
-                        return;
-                    }
-
-                    // Validamos el contraseña
-                    if (Cadena.Vacia(txtContraseña.Text))
-                    {
-                        MessageBox.Show("Debe ingresar la contraseña del usuario de la página web");
-                        return;
-                    }
-
-                    // Validamos el sql
-                    if (Cadena.Vacia(txtSql.Text))
-                    {
-                        MessageBox.Show("Debe ingresar el nombre de servicio de SQL SERVER");
-                        return;
-                    }
-
-                    // Validamosel inicio desion
-                    if (!_wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text).Success)
-                    {
-                        MessageBox.Show("No se ha podido verificar el inicio de sesión");
                         return;
                     }
 
