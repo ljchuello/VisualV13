@@ -7,10 +7,10 @@ namespace VisualV13.Libreria
 {
     public class Configuracion
     {
-        public string Url { set; get; } = string.Empty;
-        public string Usuario { set; get; } = string.Empty;
-        public string Contrasenia { set; get; } = string.Empty;
-        public string MsSqlServer { set; get; } = string.Empty;
+        public string Url { set; get; } = "http://localhost/";
+        public string Usuario { set; get; } = "admin@admin.com";
+        public string Contrasenia { set; get; } = "123456";
+        public string MsSqlServer { set; get; } = "MSSQL$SQLEXPRESS";
 
         public bool Guardar(Configuracion configuracion)
         {

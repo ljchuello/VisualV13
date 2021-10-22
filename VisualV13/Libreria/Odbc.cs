@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Text;
 
@@ -27,7 +28,8 @@ namespace VisualV13.Libreria
                                               "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
                                               "\nEstadoId = 17 AND" +
                                               $"\ndb.fechaEmision > '{GetStringDateTime(DateTime.Now.AddDays(-30))}' AND" +
-                                              $"\ndb.fechaAutorizacion < '{GetStringDateTime(DateTime.Now.AddMinutes(-15))}'; ";
+                                              $"\ndb.fechaAutorizacion < '{GetStringDateTime(DateTime.Now.AddMinutes(-15))}' AND" +
+                                              $"\nLEN(db.emailCliente) <> 0; ";
                     OdbcDataReader dbReader = odbcCommand.ExecuteReader();
                     while (dbReader.Read())
                     {
@@ -46,9 +48,9 @@ namespace VisualV13.Libreria
         /// Obtiene el id del proximo documento que no ha enviado correo
         /// </summary>
         /// <returns></returns>
-        public string Select_NoMail_Proximo()
+        public List<string> Select_NoMail_25_Proximo()
         {
-            string id = string.Empty;
+            List<string> list = new List<string>();
             try
             {
                 using (OdbcConnection odbcConnection = new OdbcConnection("DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;"))
@@ -57,15 +59,16 @@ namespace VisualV13.Libreria
                     odbcConnection.Open();
                     odbcCommand.Connection = odbcConnection;
                     odbcCommand.CommandText = "SET DATEFORMAT YMD" +
-                                              "\nSELECT TOP 1 db.id FROM dbo.DocumentosBase db" +
+                                              "\nSELECT TOP 25 db.id FROM dbo.DocumentosBase db" +
                                               "\nWHERE id NOT IN (SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
                                               "\nEstadoId = 17 AND" +
                                               $"\ndb.fechaEmision > '{GetStringDateTime(DateTime.Now.AddDays(-30))}' AND" +
-                                              $"\ndb.fechaAutorizacion < '{GetStringDateTime(DateTime.Now.AddMinutes(-15))}'; ";
+                                              $"\ndb.fechaAutorizacion < '{GetStringDateTime(DateTime.Now.AddMinutes(-15))}' AND" +
+                                              $"\nLEN(db.emailCliente) <> 0; ";
                     OdbcDataReader dbReader = odbcCommand.ExecuteReader();
                     while (dbReader.Read())
                     {
-                        id = Convert.ToString(dbReader["id"]);
+                        list.Add(Convert.ToString(dbReader["id"]));
                     }
                 }
             }
@@ -73,7 +76,7 @@ namespace VisualV13.Libreria
             {
                 Console.WriteLine(exception);
             }
-            return id;
+            return list;
         }
 
         /// <summary>
@@ -178,6 +181,39 @@ namespace VisualV13.Libreria
                 Console.WriteLine(exception);
             }
             return id;
+        }
+
+        /// <summary>
+        /// Devuelve el id de un documento aautorizar
+        /// </summary>
+        /// <returns></returns>
+        public List<string> Select_Get_25_NoAutoriado()
+        {
+            List<string> list = new List<string>();
+            try
+            {
+
+                using (OdbcConnection odbcConnection = new OdbcConnection("DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;"))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    odbcConnection.Open();
+                    odbcCommand.Connection = odbcConnection;
+                    odbcCommand.CommandText = "SET DATEFORMAT YMD" +
+                                              "\nSELECT TOP 25 db.id FROM dbo.DocumentosBase db" +
+                                              "\nWHERE db.estadoId IN(11, 12, 14, 15, 18)" +
+                                              "\nORDER BY db.fechaEmision";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        list.Add(Convert.ToString(dbReader["id"]));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            return list;
         }
 
         /// <summary>

@@ -30,6 +30,7 @@
         {
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.lblDocList = new MetroFramework.Controls.MetroLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblEmailsSinEnviar = new MetroFramework.Controls.MetroLabel();
             this.lblFechaInicio = new MetroFramework.Controls.MetroLabel();
@@ -47,7 +48,6 @@
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.lblDocList = new MetroFramework.Controls.MetroLabel();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -60,7 +60,7 @@
             this.metroTabControl1.Controls.Add(this.metroTabPage2);
             this.metroTabControl1.Location = new System.Drawing.Point(24, 64);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 1;
             this.metroTabControl1.Size = new System.Drawing.Size(303, 363);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
@@ -81,6 +81,16 @@
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
             // 
+            // lblDocList
+            // 
+            this.lblDocList.AutoSize = true;
+            this.lblDocList.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.lblDocList.Location = new System.Drawing.Point(3, 133);
+            this.lblDocList.Name = "lblDocList";
+            this.lblDocList.Size = new System.Drawing.Size(106, 25);
+            this.lblDocList.TabIndex = 5;
+            this.lblDocList.Text = "metroLabel5";
+            // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.Window;
@@ -93,7 +103,7 @@
             this.groupBox1.Size = new System.Drawing.Size(289, 127);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "Principal";
             // 
             // lblEmailsSinEnviar
             // 
@@ -236,7 +246,7 @@
             this.txtContraseña.Location = new System.Drawing.Point(4, 135);
             this.txtContraseña.MaxLength = 32767;
             this.txtContraseña.Name = "txtContraseña";
-            this.txtContraseña.PasswordChar = '\0';
+            this.txtContraseña.PasswordChar = 'X';
             this.txtContraseña.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtContraseña.SelectedText = "";
             this.txtContraseña.SelectionLength = 0;
@@ -334,16 +344,6 @@
             this.metroLabel1.Size = new System.Drawing.Size(130, 19);
             this.metroLabel1.TabIndex = 2;
             this.metroLabel1.Text = "Url (http://localhost/)";
-            // 
-            // lblDocList
-            // 
-            this.lblDocList.AutoSize = true;
-            this.lblDocList.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.lblDocList.Location = new System.Drawing.Point(3, 133);
-            this.lblDocList.Name = "lblDocList";
-            this.lblDocList.Size = new System.Drawing.Size(106, 25);
-            this.lblDocList.TabIndex = 5;
-            this.lblDocList.Text = "metroLabel5";
             // 
             // Form1
             // 

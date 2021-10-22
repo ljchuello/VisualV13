@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -58,6 +59,17 @@ namespace VisualV13
                 return;
             }
 
+            // Validamos si es administrador
+            if (IsAdministrator() == false)
+            {
+                _trabajando = false;
+                _close = true;
+                MessageBox.Show("Se cierra el servicio, el servicio debe ser abierto como administrador");
+                Application.Exit();
+                Environment.Exit(0);
+                return;
+            }
+
             // Stop
             metroButton1_Click(null, null);
 
@@ -66,6 +78,7 @@ namespace VisualV13
             _ = Trabajo_Estadisticas_Comprobantes();
             _ = Trabajo_Autorizar();
             _ = Trabajo_CorreosEnviar();
+            _ = Trabajo_Servicio();
         }
 
         #region Trabajación
@@ -161,10 +174,10 @@ namespace VisualV13
                         try
                         {
                             // Validamos si hay documentos por autorizar
-                            string id = _odbc.Select_Get_NoAutoriado();
+                            List<string> list = _odbc.Select_Get_25_NoAutoriado();
 
                             // Validamos
-                            if (!Cadena.Vacia(id))
+                            if (list.Count > 0)
                             {
                                 // Iniciamos sesion
                                 oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
@@ -172,8 +185,13 @@ namespace VisualV13
                                 // Tokens
                                 Dictionary<string, string> token = oResultado.Resultado;
 
-                                // Mandamos a autorizar
-                                await _wsDocumentos.Autorizar(id, token, txtUrl.Text);
+                                // Recorremos
+                                foreach (string row in list)
+                                {
+                                    // Mandamos a autorizar
+                                    await _wsDocumentos.Autorizar(row, token, txtUrl.Text);
+
+                                }
                             }
 
                             // No hay nada que autorizar esperamos
@@ -193,6 +211,10 @@ namespace VisualV13
             });
         }
 
+        /// <summary>
+        /// Trabajo que autoriza los comprobantes
+        /// </summary>
+        /// <returns></returns>
         async Task Trabajo_CorreosEnviar()
         {
             await Task.Run(async () =>
@@ -204,10 +226,10 @@ namespace VisualV13
                         try
                         {
                             // Validamos si hay documentos por enviar
-                            string id = _odbc.Select_NoMail_Proximo();
+                            List<string> list = _odbc.Select_NoMail_25_Proximo();
 
                             // Validamos
-                            if (!Cadena.Vacia(id))
+                            if (list.Count > 0)
                             {
                                 // Iniciamos sesion
                                 oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
@@ -215,8 +237,12 @@ namespace VisualV13
                                 // Tokens
                                 Dictionary<string, string> token = oResultado.Resultado;
 
-                                // Mandamos a autorizar
-                                await _wsDocumentos.EnviarEmail(id, token, txtUrl.Text);
+                                // Recorremos
+                                foreach (string row in list)
+                                {
+                                    // Mandamos a autorizar
+                                    await _wsDocumentos.EnviarEmail(row, token, txtUrl.Text);
+                                }
                             }
 
                             // No hay nada que autorizar esperamos
@@ -231,6 +257,33 @@ namespace VisualV13
                     {
                         // Esperamos
                         Thread.Sleep(1000);
+                    }
+                }
+            });
+        }
+
+        async Task Trabajo_Servicio()
+        {
+            await Task.Run(async () =>
+            {
+                while (_close == false)
+                {
+                    if (_trabajando)
+                    {
+                        try
+                        {
+                            // Validamos si hay documentos por enviar
+                            await _servicio.CheckAsync(txtSql.Text);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+                    else
+                    {
+                        // Esperamos
+                        Thread.Sleep(5000);
                     }
                 }
             });
@@ -276,6 +329,13 @@ namespace VisualV13
                 if (!_wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text).Success)
                 {
                     MessageBox.Show("No se ha podido verificar el inicio de sesión");
+                    return false;
+                }
+
+                // Validamos el nombre del servicio
+                if (_servicio.ExisteServ(txtSql.Text) == false)
+                {
+                    MessageBox.Show("No se encuentra el servicio de SQL SERVER");
                     return false;
                 }
 
@@ -350,5 +410,11 @@ namespace VisualV13
         }
 
         #endregion
+
+        public static bool IsAdministrator()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
     }
 }
