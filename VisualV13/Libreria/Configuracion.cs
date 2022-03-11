@@ -11,6 +11,7 @@ namespace VisualV13.Libreria
         public string Usuario { set; get; } = "admin@admin.com";
         public string Contrasenia { set; get; } = "123456";
         public string MsSqlServer { set; get; } = "MSSQL$SQLEXPRESS";
+        public bool ReenviarCorreo { set; get; } = false;
 
         public bool Guardar(Configuracion configuracion)
         {

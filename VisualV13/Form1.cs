@@ -44,6 +44,7 @@ namespace VisualV13
             txtUsuario.Text = _configuracion.Usuario;
             txtContraseña.Text = _configuracion.Contrasenia;
             txtSql.Text = _configuracion.MsSqlServer;
+            chReenviar.Checked = _configuracion.ReenviarCorreo;
 
             //Text
             Text = "Visual V13";
@@ -225,23 +226,27 @@ namespace VisualV13
                     {
                         try
                         {
-                            // Validamos si hay documentos por enviar
-                            List<string> list = _odbc.Select_NoMail_25_Proximo();
-
-                            // Validamos
-                            if (list.Count > 0)
+                            // Activo
+                            if (chReenviar.Checked)
                             {
-                                // Iniciamos sesion
-                                oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
+                                // Validamos si hay documentos por enviar
+                                List<string> list = _odbc.Select_NoMail_25_Proximo();
 
-                                // Tokens
-                                Dictionary<string, string> token = oResultado.Resultado;
-
-                                // Recorremos
-                                foreach (string row in list)
+                                // Validamos
+                                if (list.Count > 0)
                                 {
-                                    // Mandamos a autorizar
-                                    await _wsDocumentos.EnviarEmail(row, token, txtUrl.Text);
+                                    // Iniciamos sesion
+                                    oResultado oResultado = _wsInicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContraseña.Text);
+
+                                    // Tokens
+                                    Dictionary<string, string> token = oResultado.Resultado;
+
+                                    // Recorremos
+                                    foreach (string row in list)
+                                    {
+                                        // Mandamos a autorizar
+                                        await _wsDocumentos.EnviarEmail(row, token, txtUrl.Text);
+                                    }
                                 }
                             }
 
@@ -368,6 +373,7 @@ namespace VisualV13
                     _configuracion.Usuario = txtUsuario.Text;
                     _configuracion.Contrasenia = txtContraseña.Text;
                     _configuracion.MsSqlServer = txtSql.Text;
+                    _configuracion.ReenviarCorreo = chReenviar.Checked;
                     if (!_configuracion.Guardar(_configuracion))
                     {
                         MessageBox.Show("No se ha podido guardar la configuración");
@@ -399,6 +405,7 @@ namespace VisualV13
                 txtUsuario.Text = _configuracion.Usuario;
                 txtContraseña.Text = _configuracion.Contrasenia;
                 txtSql.Text = _configuracion.MsSqlServer;
+                chReenviar.Checked = _configuracion.ReenviarCorreo;
 
                 MessageBox.Show("Se ha restaurado la configuración");
             }
