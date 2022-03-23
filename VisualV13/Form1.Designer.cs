@@ -37,6 +37,8 @@
             this.lblEstado = new MetroFramework.Controls.MetroLabel();
             this.btnEjecutar = new MetroFramework.Controls.MetroButton();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.chReenviar = new MetroFramework.Controls.MetroCheckBox();
+            this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
             this.btnRestaurar = new MetroFramework.Controls.MetroButton();
             this.btnGuardar = new MetroFramework.Controls.MetroButton();
             this.txtSql = new MetroFramework.Controls.MetroTextBox();
@@ -48,8 +50,6 @@
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
-            this.chReenviar = new MetroFramework.Controls.MetroCheckBox();
             this.metroLabel6 = new MetroFramework.Controls.MetroLabel();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
@@ -63,7 +63,7 @@
             this.metroTabControl1.Controls.Add(this.metroTabPage2);
             this.metroTabControl1.Location = new System.Drawing.Point(24, 64);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 1;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(303, 363);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
@@ -173,6 +173,25 @@
             this.metroTabPage2.VerticalScrollbarBarColor = true;
             this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.VerticalScrollbarSize = 10;
+            // 
+            // chReenviar
+            // 
+            this.chReenviar.AutoSize = true;
+            this.chReenviar.Location = new System.Drawing.Point(4, 221);
+            this.chReenviar.Name = "chReenviar";
+            this.chReenviar.Size = new System.Drawing.Size(105, 15);
+            this.chReenviar.TabIndex = 13;
+            this.chReenviar.Text = "Reenviar correo";
+            this.chReenviar.UseSelectable = true;
+            // 
+            // metroLabel5
+            // 
+            this.metroLabel5.AutoSize = true;
+            this.metroLabel5.Location = new System.Drawing.Point(3, 199);
+            this.metroLabel5.Name = "metroLabel5";
+            this.metroLabel5.Size = new System.Drawing.Size(105, 19);
+            this.metroLabel5.TabIndex = 12;
+            this.metroLabel5.Text = "Reenviar Correo";
             // 
             // btnRestaurar
             // 
@@ -350,29 +369,10 @@
             this.metroLabel1.TabIndex = 2;
             this.metroLabel1.Text = "Url (http://localhost/)";
             // 
-            // metroLabel5
-            // 
-            this.metroLabel5.AutoSize = true;
-            this.metroLabel5.Location = new System.Drawing.Point(3, 199);
-            this.metroLabel5.Name = "metroLabel5";
-            this.metroLabel5.Size = new System.Drawing.Size(105, 19);
-            this.metroLabel5.TabIndex = 12;
-            this.metroLabel5.Text = "Reenviar Correo";
-            // 
-            // chReenviar
-            // 
-            this.chReenviar.AutoSize = true;
-            this.chReenviar.Location = new System.Drawing.Point(4, 221);
-            this.chReenviar.Name = "chReenviar";
-            this.chReenviar.Size = new System.Drawing.Size(105, 15);
-            this.chReenviar.TabIndex = 13;
-            this.chReenviar.Text = "Reenviar correo";
-            this.chReenviar.UseSelectable = true;
-            // 
             // metroLabel6
             // 
             this.metroLabel6.AutoSize = true;
-            this.metroLabel6.Location = new System.Drawing.Point(264, 9);
+            this.metroLabel6.Location = new System.Drawing.Point(242, 27);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(83, 19);
             this.metroLabel6.TabIndex = 1;

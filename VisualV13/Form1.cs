@@ -422,6 +422,5 @@ namespace VisualV13
         {
             return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
         }
-
     }
 }
